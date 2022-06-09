@@ -1,0 +1,68 @@
+unixraz
+
+
+=============================
+=      File description     =
+=============================
+SpaceShip.java - abstract class for space-ships
+Human.java - human controlled ship.
+Runner.java - a ship that tries to avoid all other ships
+Basher.java - a ship that deliberately tries to collide with other ships.
+Aggressive.java -  a ship that tries to pursue other ships and fire at them.
+Drunkard.java - a space ship with random operations. This ship will giggle between right and left turn,
+teleport randomly with a chance of 0.001 each round and fire randomly with a chance of 0.01 each round.
+It will not accelerate and won't turn on its shield.
+Special.java - this spaceship will act like some kind of mine.
+It will stay in constant speed, turn around all the time and fire to all directions.
+
+=============================
+=          Design           =
+=============================
+Design:
+I chose to implement this game using inheritance and polymorphism,
+because this is a classic case of "is a" relationship, as we learned in the lectures:
+Every class is a different kind of space-ship, and they share most of their properties.
+Thus, I have made an abstract class called SpaceShip which implements the methods all the space-ships must have.
+The doAction() method is the only abstract one, since every space-ship has it's own kind of behavior.
+Extendability:
+In case we'll want to add a new feature to all the spaceships, we can do so by adding it in the SpaceShip class,
+and we won't have to add it separately in every sub class.
+Modularity:
+The modularity principle in this program is within the separation of the game object (SpaceWars), physical
+properties (SpaceShipPhysics), the GUI and the space ship itself. Each one of the 4 aspects is handled by a
+different module O(different class in our case. In this case for example,
+if we want to change something in how the spaceship
+looks on the screen - we will only need to change the GUI class, without worry about the other.
+Intuitiveness and understandability:
+I have kept the principle of the minimal API to make the program as compact and understandable as possible.
+To each method that was added I have made a short description.
+I have created a Java doc.
+Representation of the classes and their relationships:
+All 6 classes I have added inherits from the SpaceShip class.
+The SpaceShip class uses the composition principle by holding a SpaceShipPhysics object.
+The SpaceWars object is using the SpaceShip and the GUI to manage the program.
+
+=============================
+=  Implementation issues   =
+=============================
+I encountered two situations where I had to decide between having duplicated code or larger API.
+1. The Basher and Aggressive ships are quite similar in their actions.
+2. At the end of every round, numerous operations has to be made for all space-ships.
+What I did:
+I decided to expand the API with 3 methods:
+1. a method that runs away from a destination
+2. a method that makes the ship stick to a destination
+3. a method that executed operations that needs to take place in the end of the round
+
+The first 2 methods, in my opinion, are important to add to the API, because they are basic methods
+for any other new space ship that can be created and added to the game, and so the duplicate code
+is eliminated. It's okay for some space-ship not to use all the methods she inherits (like with the
+teleport and fire methods that not all the space-ships are using).
+The third method is in use for all spaceships so it's definitely okay to add to the API instead of
+duplicate the code each time.
+
+=============================
+=    Answers to questions   =
+=============================
+Behavior of Drunkard and Special is in File Description section,
+and in the JavaDoc as well.

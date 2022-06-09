@@ -1,0 +1,120 @@
+unixraz
+maayan.lital
+
+=============================
+=      File description     =
+=============================
+oop.ex5 package:
+	main package:
+        GlobalPhrase -  Goes over the file for the first time and extracts global variables and methods
+        MethodsPhrase - Goes over inner scopes of the file and extracts inner variables and if/while scopes
+        ScopePhrase - phrase given lines that represent scope lines
+        Sjavac - contains the main method that runs the program
+	tools package:
+        GeneralTools - contains static functions that other classes use as tools for certain needs
+        RegexDictionary - A class that holds all the regex strings and patters we use in the program
+        BooleanWarping - class warping a boolean, for boolean references usage
+	validation package:
+		ValidateBrackets - validates that given lines contains valid appearance of curled brackets
+		ValidateIfWhile - validates that if/while scopes are legal, and creates conditional objects
+		ValidateMethodCall - validates that a call for a method is valid
+		ValidateMethodSignature - validates method signature and creates new instance of method
+		ValidateVariable - validates that the line is a legal variable declaration / assignment.
+	objects package:
+		SjavaObject - an abstract class for objects
+		Conditional - represents an if/while object
+		Method - represents a method object
+        Scope - represents a scope object, that have it's relevant variables and methods
+        TypeOneException - the exception object we throw in this program
+        Variable - represents a variable object
+
+
+=============================
+=          Design           =
+=============================
+In this exercise we have been asked to combine design principles that we have learned in the class.
+Since the exercise was quite complicated we focused on modularity, so each one of us could work on
+a different part of the program, and afterwards we would be able to combine all code parts together.
+First, we have divided the main package to 4 sub-packages, so the code is more organized.
+Each package contains classes, and each class is taking care of a small fraction of the program.
+We've made a modular program by dividing it to 3 main objects: Methods, Conditionals and Variables.
+Each object uses it's own relevant Validate class, which validates and creates the object (in case of success)
+or raises an exception (in case of failure). So, if we'll want to support more methods/Variables in the future,
+we'll only have to modify the corresponding Validate class, and won't have to touch the object class.
+In addition, we are using a class that holds all our regexes, so if we'll want to expand a certain regex
+to match more strings, we can only update the regex itself and not touch the rest of the code.
+
+The main design pattern we have used is composition (delegation), since most objects in this program acts like
+"scopes" that have their own relevant variables and methods. So, we have created a "Scope" class
+that contains global and local variables, as well as relevant functions for adding and looking
+for variables in the scope, and each object that acts as a scope, has an instance of it as a field.
+
+Since many of the possible object in this programs are some kind of "scope", we've created an
+abstract class called SjavaObject, that has a field Scope as mentioned above, and all objects
+(method, if, while) inherits from it.
+
+
+=============================
+=  Implementation details   =
+=============================
+When choosing a data structure to hold the variable and functions for each scope, we needed a structure
+that has an order, and can contain duplicates. Thus, we've chosen a arrayList (over a HashSet).
+So, every Scope object holds his variables and method in an arrayList. When we want to refer to a previously
+created variable for example, we can look for the last added variable or method with the name we are looking
+for.
+All other implementation details are referred in the Design section
+
+
+=============================
+=    Answers to questions   =
+=============================
+6.1:
+We chose to handle errors in this program using Exceptions.
+Since there are many reason why the program should return 1 for a given file, we thought
+it would be best to raise an error whenever we encounter an illegal statement.
+That way we don't have to check boolean expressions all over our program using if statements.
+It's more convenient that way, the code is more readable and easier to maintain.
+We have built a class called TypeOneException, that we throw whenever there is any illegal
+statement, and we catch it in our main function and print out 1.
+
+6.2:
+1. add new type of variable (float):
+- RegexDictionary: first we'll have to add float as an option to our main regex that has all
+the legal types for variables, and on the regex that check the validity of the value for a certain type.
+- ValidateVariable: all we have to do is, in the functions checkType and checkValue - add the above regexes
+as a case. Since ValidateMethodCall uses the same checkValue for its method parameters, there's no need to
+change anything there
+
+2.
+
+a) classes:
+RegexDictionary: for every class we support, well have to add 2 regexes:
+1 - the name of the class in the LEGAL_NAME_REGEX
+2 - a regex that validates if the value of the certain class variable is valid
+Since every Validate class is using the regexDictionary, the Validate class will now support this kind
+of variable as a legal one.
+Another change we'll have to do is update the checkType and checkValue functions in the ValidateVariable
+class, and just add cases with the new classes we support.
+
+b) Adding new different methods types:
+- RegexDictionary: modify the regex for valid method to support other types than 'void' and modify
+the regex for the return statement to support other returns value than 'null'. Those will be simple changes
+in the 'regex dictionary' thanks for this class simpleness and readability.
+- Method: add 'type' field to the class
+- ValidateFunctionCall: all we have to do is, add a function that validates the return type is valid according
+ to the method type field
+There are no more changes needed, thanks for the code's modularity.
+
+6.3:
+
+1) int regex: (^[-]?[0-9]\d*$).
+since also double and boolean can have int within them, we've used the int regex a few times in the
+program. we may have a minus sign as first character, but it is not mandatory. however, if it appears
+it can appear one time and without space before the number. then we can have any number we want, or
+not at all, hence the *.
+
+2) legal name regex: (_[_a-zA-Z0-9]|[a-zA-Z])[_0-9a-zA-Z]*
+this regex was used to ensure the name for a variable was legal.
+the first character could be either a letter, or the char '_' but then a letter,
+so that is the first capturing group. then, any of number or letter or '_' could come,
+as many as we wish or not at all - that is why we added the * at the end.

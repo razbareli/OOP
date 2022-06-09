@@ -1,0 +1,68 @@
+unixraz
+
+
+=============================
+=      File description     =
+=============================
+SimpleHashSet.java - an abstract class implementing SimpleSet
+OpenHashSet.java -  a hash-set based on chaining
+ClosedHashSet.java - – a hash-set based on closed-hashing with quadratic probing
+CollectionFacadeSet.java -  Wraps an underlying Collection<String>
+SimpleSetPerformanceAnalyzer.java - measures the run-times for the various sets
+StringLinkedList.java - Wrapper class that has a LinkedList<String> and delegates methods to it
+
+=============================
+=          Design           =
+=============================
+OpenHashSet implementation:
+I chose to use delegation. I hold an array of a wrapper class called StringLinkedList,
+which has a private LinkedList<String> field, and a getter method.
+That way, I created the same effect as if I had an array of linked lists, as expected.
+
+Deletion in Closed Set:
+I have created a static variable called 'wasDeleted', which is a String.
+Whenever a cell in the table is deleted - I insert this wasDeleted variable in it,
+and because my wasDeleted variable is static, it has one address the whole run.
+So, when I want to know if a cell was ever deleted, I compare addresses using '==',
+to see if wasDeleted is there.
+This implementation holds the requirements of constant time and memory.
+Note:
+Due to the limit of memory in Closed Set, I could not create a boolean variable for each cell
+that tells me if it ever was deleted.
+Because of that, each time the cell is occupied, I have no option to tell whether something
+was ever deleted from it. So, I will have to keep on probing when I look for a value,
+even if this cell was never deleted before.
+
+=============================
+=  Implementation issues   =
+=============================
+NA
+
+=============================
+=    Answers to questions   =
+=============================
+Analysis results:
+1. for open hash, because data1 has the same hash for all words, it simply acts like a linked list,
+and it the results we can really see that the time of them was similar, and long - as expected for
+a linked list.
+for closed hash, because of the same reason as I mentioned above, most of the add() operations
+had to include probing. in fact, the probing was 'double' since in every add() method we have a contains()
+method, where we also "probe" along the cells until we find a cell that is null or iterated #capacity times
+with increasing i value.
+
+2. most of the tests, HashSet and TreeSet had the best results.
+It is obvious why the linked list is not a good option to act as a set,
+so I won't ever choose it for anything. I think that for all purposes I would go
+with the HashSet, because it's quick and memory efficient.
+
+3. in test 1, the open set did 3 times faster than the closed set, and in test 2,
+a lot faster.
+In general, the open set performed better.
+I think it has to do with the fact that my closed set had a requirement not to use additional memory,
+and as I explained in Design section, it could have performed better.
+
+4. Hash set was way better in most situation, even on situations where the word had the same hash like all
+other - test 4.
+
+5. very surprising. maybe they are using a universal hash family - which means they will have less colliding,
+while he used only one hash function.

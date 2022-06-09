@@ -1,0 +1,27 @@
+unixraz
+
+
+=============================
+=      File description     =
+=============================
+Book.java - This class represents a book, which has a title, author, year of publication and different literary aspects.
+Library.java - This class represents a library, which hold a collection of books.
+Patron.java - This class represents a library patron that has a name and assigns values to different literary aspects of books.
+
+=============================
+=          Design           =
+=============================
+I have implemented the classes in such a way that I have made many small functions.
+Each function has a very specific purpose. So, if I want to change something in the future,
+I will have to change a relatively small amount of code.
+I have added 3 new functions in addition to the API, to help making the code more versatile.
+
+=============================
+=  Implementation issues   =
+=============================
+I did not have any issues during my implementation
+
+=============================
+=    Answers to questions   =
+=============================
+I didn't see any questions to answer
